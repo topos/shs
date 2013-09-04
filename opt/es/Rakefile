@@ -1,0 +1,30 @@
+ES = 'elasticsearch-0.90.3.deb'
+desc "install elasticsearch"
+task :install => :download do
+  sh "sudo dpkg --install #{ES}"
+  Rake::Task[:configure].reenable
+  Rake::Task[:configure].invoke
+end
+
+URL = "https://download.elasticsearch.org/elasticsearch/elasticsearch/#{ES}"
+desc "download #{ES}"
+task :download do
+  sh "wget -c #{URL}"
+end
+
+desc "configure"
+task :configure do
+  unless File.executable?('/etc/init.d/elasticsearch')
+      sh "sudo chmod +x /etc/init.d/elasticsearch"
+  end
+  Dir.chdir('/var/lib/elasticsearch') do
+    if Dir.exists?('./elasticsearch')
+      sh "sudo mv elasticsearch elasticsearch-#{`logname`.strip}"
+    end
+  end
+end
+
+desc "remove downloaded files"
+task :clean do
+  sh "rm -f *.deb"
+end
