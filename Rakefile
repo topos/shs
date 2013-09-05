@@ -2,10 +2,10 @@ require File.expand_path("#{File.dirname(__FILE__)}/lib/task/dev.rb")
 Dir.glob("#{PROJ_HOME}/lib/task/*.rake"){|p| import p}
 
 desc "start yesod development".green
-task :syd => :start_yesod_dev
+task :ycc => :start_yesod_dev
 
 desc "start src development".green
-task :ssd => :start_src_dev
+task :scc => :start_src_dev
 
 desc "compile/link code".green
 task :c => 'dev:all'
