@@ -2,6 +2,9 @@ yesod-platform-1.2.3
 # do this once--cabal-dev list --installed doesn't know about yesod-bin
 #yesod-bin-1.2.2.1 
 persistent-postgresql-1.2.1
+lens-3.9.0.2
+handsomesoup-0.3.2
+http-conduit-1.9.4.5
 #repa-3.2.3.3
 #repa-io-3.2.3.2
 #repa-algorithms-3.2.3.1

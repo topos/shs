@@ -5,8 +5,7 @@ namespace :cabal do
     Dir.chdir(LIB_DIR) do
       pkg_list = []
       File.readlines('./cabal-dev.list').map{|l|l.strip}.each do |pkg|
-        next if pkg =~ /^\s*#.*$/
-        next if pkg =~ /^\s+$/
+        next if pkg =~ /^\s*#.*$/ || pkg =~ /^\s*$/
         unless pkgs.include?(pkg)
           pkg_list << pkg
         else
@@ -29,9 +28,17 @@ namespace :cabal do
   end
 
   desc "list cabal-dev packages"
-  task :list do
+  task :list, [:cabal,:remote] do |t,arg|
     Dir.chdir(LIB_DIR) do
-      sh "cabal-dev list --installed --simple-output"
+      if arg.cabal.nil?
+        sh "cabal-dev list --installed --simple-output"
+      else
+        if arg.remote.nil?
+          sh "cabal-dev list --installed --simple-output #{arg.cabal}"
+        else
+          sh "cabal-dev list --simple-output #{arg.cabal}"
+        end
+      end
     end
   end
   
