@@ -1,10 +1,13 @@
 module Main where
 
-import Text.HandsomeSoup
-import Text.XML.HXT.Core
-import qualified Network.HTTP.Conduit as C
-import qualified Data.ByteString.Lazy as L
-import qualified Wallbase as W
-import qualified NyuScps as Nyu
+import qualified NyuScps as N
 
-main = Nyu.run
+main = do
+  courses <- N.courseData
+  case courses of
+    Nothing -> print "error"
+    Just courses -> do
+      print $ N.message courses
+      print $ N.totalResults courses
+      print $ N.resultList courses
+
