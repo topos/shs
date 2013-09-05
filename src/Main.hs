@@ -1,6 +1,6 @@
 module Main where
 
-import qualified NyuScps as N
+import qualified DataFeed.NyuScps as N
 
 main = do
   courses <- N.courseData

@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings,DeriveGeneric #-}
-module NyuScps where
+module DataFeed.NyuScps where
 
 import Prelude as P
 import Network.HTTP.Conduit (simpleHttp)
