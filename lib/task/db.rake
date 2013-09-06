@@ -2,6 +2,7 @@ namespace :db do
   require File.expand_path("#{File.dirname(__FILE__)}/dev.rb")
 
   POSTGRES = YAML.load_file("#{PROJ_HOME}/config/postgresql.yml")
+  P = POSTGRES[proj_mode]
 
   if `uname` == "Darwin"
     ENV['PATH'] = "/opt/local/bin:#{ENV['PATH']}"
@@ -10,11 +11,9 @@ namespace :db do
   desc "initialize user and database"
   task :init, [:db] => [:user, :database]
 
-  P = POSTGRES[proj_mode]
-
   desc "create database"
   task :database, [:db] do |t, arg|
-    arg.with_defaults(:username => P[:user], :database => P[:database])
+    arg.with_defaults(:username => P['user'], :database => P['database'])
     c = [] << "createdb" 
     c << "--owner=#{arg.username}"
     c << "--template=template1"
@@ -27,7 +26,7 @@ namespace :db do
 
   desc "create database user"
   task :user, [:login, :password]  do |t, arg|
-    arg.with_defaults(:username => P[:user], :password => P[:password])
+    arg.with_defaults(:username => P['user'], :password => P['password'])
     sql = "create user #{arg.username} with password '#{arg.password}' nosuperuser createdb createrole;"
     psql(sql)
   end
@@ -39,7 +38,7 @@ namespace :db do
 
   desc "log into db as user=klas"
   task :sqlu do
-    sh "sudo -E su - postgres -c 'psql -U#{P[:user]} #{P[:database]}'"
+    sh "sudo -E su - postgres -c 'psql -U#{P['user']} #{P['database']}'"
   end
   
   desc "start postgres"
