@@ -1,4 +1,4 @@
-module Wallbase where
+module DataFeed.Wallbase where
 
 import Text.HandsomeSoup
 import Text.XML.HXT.Core
@@ -19,19 +19,16 @@ download url = do
       B.writeFile name (B.pack content')
     Nothing -> putStrLn $ "error: " ++ url
 
-image::String -> IO String
+image :: String -> IO String
 image url = do
   let doc = fromUrl url
   urls <- runX $ doc >>> css "div" >>> hasAttrValue "class" (== "content clr") >>> getChildren >>> css "img" ! "src"
   return $ head urls
 
-url::String
-url = "https://www.scps.nyu.edu/webapps/ncCourseSearch.htm?action=searchAll"
-
-run::IO ()
-run = do
+urls :: IO ([String])
+urls = do
   let doc = fromUrl "http://wallbase.cc/toplist"
   urls <- runX $ doc >>> css "a" >>> hasAttrValue "target" (== "_blank") ! "href"
   mapM_ (\url -> image url >>= download) urls
-  print urls
+  return urls
 
