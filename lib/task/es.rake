@@ -25,7 +25,7 @@ namespace :es do
   desc "install elasticsearch"
   task :install => :download do
     sh "sudo dpkg --install #{ES}"
-    Rake::Task[:configure].invoke
+    Rake::Task['es:configure'].invoke
   end
 
   desc "configure"

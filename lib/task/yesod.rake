@@ -1,7 +1,4 @@
 namespace :yesod do
-  require 'sys/proctable'
-  include Sys
-  
   desc "start yesod in dev mode--@todo: broken->fix"
   task :start do
     puts "starting yesod".green

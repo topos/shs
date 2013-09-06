@@ -1,7 +1,7 @@
 namespace :db do
   require File.expand_path("#{File.dirname(__FILE__)}/dev.rb")
 
-  POSTGRES = YAML.load_file("#{PROJ_HOME}/config/postgresql.yml").with_indifferent_access
+  POSTGRES = YAML.load_file("#{PROJ_HOME}/config/postgresql.yml")
 
   if `uname` == "Darwin"
     ENV['PATH'] = "/opt/local/bin:#{ENV['PATH']}"
@@ -21,7 +21,7 @@ namespace :db do
 
     sh "sudo su - postgres -c '#{c.join(' ')} #{arg.database}'"
     if proj_mode == 'Development'
-      sh "sudo su - postgres -c '#{c.join(' ')} #{POSTGRES[:Testing][:database]}'"
+      sh "sudo su - postgres -c '#{c.join(' ')} #{POSTGRES['Testing']['database']}'"
     end
   end
 

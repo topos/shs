@@ -1,8 +1,6 @@
 require 'date'
 require 'yaml'
-require 'active_support/core_ext/hash/indifferent_access'
 require 'smart_colored/extend'
-require 'sys/proctable'
 
 def platform?(p)
   `uname -s`.strip.downcase == p.downcase
@@ -15,6 +13,7 @@ def proj_dir(subdir =nil)
 end
 
 def process_running?(name, argfilter =nil)
+  require 'sys/proctable'
   include Sys
   ProcTable.ps do |proc|
     if argfilter.nil?
