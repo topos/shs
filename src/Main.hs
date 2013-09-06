@@ -15,5 +15,5 @@ main = do
         index $ N.resultList courses
         print "ok"
       else 
-        print "error"
-    Nothing -> print "error"
+        print "error: failure"
+    Nothing -> print "error: nothing"
