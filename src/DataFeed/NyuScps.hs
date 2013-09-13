@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings,DeriveGeneric #-}
+
 module DataFeed.NyuScps where
 
 import Prelude as P
@@ -137,11 +138,8 @@ instance ToJSON Course
 get :: String -> IO L.ByteString
 get url = simpleHttp url
 
-url :: String
-url = "http://www.scps.nyu.edu/webapps/ncCourseSearch.htm?action=searchAll"
-
 courseData :: IO (Maybe Courses)
 courseData = do
-  let res = get url
+  let res = get "http://www.scps.nyu.edu/webapps/ncCourseSearch.htm?action=searchAll"
   json <- (decode <$> res) :: IO (Maybe Courses)
   return json

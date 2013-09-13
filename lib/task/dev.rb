@@ -34,6 +34,7 @@ PROJ_HOME = File.expand_path("#{File.dirname(__FILE__)}/../../.")
 SRC_DIR = proj_dir('src')
 ETC_DIR = proj_dir('etc')
 LIB_DIR = proj_dir('lib')
+CABAL_DEV_DIR = proj_dir('lib/cabal-dev')
 
 GHC_PACKAGE_PATH = "#{PROJ_HOME}/lib/cabal-dev/packages-7.6.3.conf"
 EXTRA_INC, EXTRA_LIB = if platform?('darwin')

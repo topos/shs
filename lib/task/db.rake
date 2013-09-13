@@ -38,7 +38,11 @@ namespace :db do
 
   desc "log into db as user=klas"
   task :sqlu do
-    sh "sudo -E su - postgres -c 'psql -U#{P['user']} #{P['database']}'"
+    ENV['PGUSER'] = P['user']
+    ENV['PGPASSWORD'] = P['password']
+    ENV['PGDATABASE'] = P['database']
+    ENV['PGHOST'] = P['host']
+    sh "sudo -E su postgres -c psql"
   end
   
   desc "start postgres"

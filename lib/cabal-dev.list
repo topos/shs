@@ -1,10 +1,15 @@
-yesod-platform-1.2.3
-# do this once--cabal-dev list --installed doesn't know about yesod-bin
-#yesod-bin-1.2.2.1 
+yesod-platform-1.2.4.2
+# hack in cabal.rake to handle the odd case of "yesod-bin"
+yesod-bin-1.2.3.3 
 persistent-postgresql-1.2.1
-lens-3.9.0.2
+shakespeare-js-1.2.0
+http-conduit-1.9.5
 handsomesoup-0.3.2
-http-conduit-1.9.4.5
+lens-3.9.1
+HsSyck-0.50
+yaml-light-0.1.4
+#yaml-config-0.2.0
+#data-object-yaml-0.3.4.2
 #repa-3.2.3.3
 #repa-io-3.2.3.2
 #repa-algorithms-3.2.3.1

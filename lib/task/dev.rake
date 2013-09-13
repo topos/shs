@@ -9,7 +9,7 @@ namespace :dev do
       @listener = Listen.to!('.', relative_path: true, filter: /\.hs$/) do |modified, added, removed|
         if arg.build_mode == 'all'
           make_all unless FileList[([modified]+[added]).flatten].exclude(/^.+Spec\.hs$/).empty?
-        else
+        else # anything, e.g.: "inc"
           make_inc(modified, added, removed)
         end
         make_spec(modified, added) unless FileList[([modified]+[added]).flatten].ext('Spec.hs').empty?

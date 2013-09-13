@@ -15,6 +15,8 @@ namespace :cabal do
       if pkg_list.size > 0
         sh "cabal-dev update"
         pkg_list.each do |pkg|
+          # hack--since "cabal-dev list --installed" doesn't report "yesod-bin" we check for its binary "yesod"
+          next if pkg.start_with?("yesod-bin-") && File.exists?("#{CABAL_DEV_DIR}/bin/yesod")
           if platform?('linux')
             sh "cabal-dev install #{pkg}"
           elsif platform?('darwin')
