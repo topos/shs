@@ -30,5 +30,10 @@ conf yaml = do
   -- return $ PostgresConf user password db host 5432 10
   return $ PostgresConf "" "" "" "" 1 2
 
+extractMap :: Maybe YamlLight -> Map YamlLight YamlLight
+extractMap yaml = do
+  let y' = fromJust $ Map.lookup (YStr "<<") (fromJust (unMap $ fromJust yaml))
+  fromJust $ unMap y'
+
 toStr :: Maybe YamlLight -> ByteString
 toStr s = fromJust $ unStr $ fromMaybe (YStr "-") s

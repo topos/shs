@@ -11,6 +11,6 @@ import Conf.Postgres as Postgres
 main :: IO ()
 main = do
   y <- Postgres.yaml "Development"
-  let y' = fromJust $ Map.lookup (YStr "<<") (fromJust (unMap $ fromJust y))
-      host = Map.lookup (YStr "host") (fromJust (unMap y'))
-  print $ fromJust (unStr (fromJust host))
+  let ymap = extractMap y
+      host = fromJust $ unStr $ fromJust $ Map.lookup (YStr "host") ymap
+  print host
