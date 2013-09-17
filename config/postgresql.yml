@@ -1,12 +1,12 @@
 Default: &defaults
   user: klas
   password: mbp2ubun2
+  database: klas_development
   host: localhost
   port: 5432
   poolsize: 10
 
 Development:
-  database: klas_development
   <<: *defaults
 
 Testing:

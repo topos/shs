@@ -1,32 +1,35 @@
 {-# LANGUAGE OverloadedStrings,DeriveGeneric #-}
 module Main where
 
-import qualified DataFeed.NyuScps as N
-import qualified Model.Course as MC
-import qualified Database.PostgreSQL.Simple as Ps
+import Data.Maybe (fromJust)
+import DataFeed.NyuScps (Course,courseData,message,resultList)
+import Config.Postgres (PostgresConfig)
 
 main = do
-  courses <- N.courseData
+  courses <- courseData
   case courses of
     Just courses -> do
-      if "Success" == N.message courses then do
-        update $ N.resultList courses
+      if "Success" == message courses then do
+        update $ resultList courses
         print "ok"
       else 
         print "error: failure"
     Nothing -> print "error: nothing"
 
-update :: [N.Course] -> IO ()
+update :: [Course] -> IO ()
 update courses = do
   save courses
   index courses
   print "ok: update"
 
-save :: [N.Course] -> IO ()
+save :: [Course] -> IO ()
 save courses = do
   print "ok: courses"
 
-index :: [N.Course] -> IO ()
+index :: [Course] -> IO ()
 index courses = do
   print "ok: index"
+
+-- postgresConf :: IO (Maybe PostgresConf)
+-- postgresConf = P.conf (fromJust $ P.yaml "Development")
 
