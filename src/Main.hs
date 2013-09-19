@@ -1,38 +1,31 @@
 {-# LANGUAGE OverloadedStrings,DeriveGeneric #-}
 module Main where
 
+import Control.Monad (forM_)
 import Data.Maybe (fromJust)
-import DataFeed.NyuScps (Course,courseData,message,resultList)
+import Database.Persist.Postgresql (withPostgresqlPool,runMigration,runSqlPersistMPool,insert)
+import qualified DataFeed.NyuScps as Nyu
+import Model.Course as Course
 import Config.Postgres as Postgres
+import Model.Model
 
 main = do
-  courses <- courseData
+  courses <- Nyu.courseData
   case courses of
     Just courses -> do
-      if "Success" == message courses then do
-        update $ resultList courses
-        print "ok"
+      if "Success" == Nyu.message courses then
+        update $ Nyu.resultList courses
       else 
         print "error: failure"
     Nothing -> print "error: nothing"
 
-update :: [Course] -> IO ()
+update :: [Nyu.Course] -> IO ()
 update courses = do
-  print courses
-  save courses
+  connectionStr <- Postgres.connection "Testing"
+  Course.save courses connectionStr
   index courses
-  print "ok: update"
+  putStrLn "update: finished"
 
-save :: [Course] -> IO ()
-save courses = do
-  print "ok: save"
-
-index :: [Course] -> IO ()
+index :: [Nyu.Course] -> IO ()
 index courses = do
-  print "ok: index"
-
-postgresConf :: IO (Maybe PostgresSection)
-postgresConf = do
-  c <- Postgres.config
-  let c' = fromJust c
-  return $ section "Development" c'
+  putStrLn "index: finished"

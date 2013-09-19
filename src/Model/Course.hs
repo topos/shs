@@ -1,48 +1,24 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Model.Course where
 
-import Prelude as P
-import GHC.Int
-import Control.Monad
-import Control.Applicative
-import Data.Text
-import Database.PostgreSQL.Simple as Ps
-import Database.PostgreSQL.Simple.FromRow
-import Database.PostgreSQL.Simple.ToRow
-import Database.PostgreSQL.Simple.ToField
+import Control.Monad (forM_)
+import Database.Persist
+import Database.Persist.Postgresql
+import Database.Persist.TH
+import Data.Aeson (encode)
+import qualified Data.List as List (concat)
+import qualified Data.Text as T
+import qualified Data.Text.Encoding as T
+import qualified Data.ByteString.Lazy as BL
+import qualified DataFeed.NyuScps as Nyu
+import Model.Model
 
-data CourseMeta = CourseMeta{url :: Text,school :: Text} deriving (Show)
-data CourseData = CourseData{json :: Text,courseMeta :: CourseMeta} deriving (Show)
+save :: [Nyu.Course] -> ConnectionString -> IO ()
+save courses connection = withPostgresqlPool connection 16 $ \pool -> do
+  flip runSqlPersistMPool pool $ do
+    runMigration migrateAll
+    metaId <- insert $ CourseMeta Nyu.url Nyu.school
+    forM_ courses $ \c -> do
+      let json = BL.toChunks $ encode c
+      insert $ CourseData (T.intercalate "" (map T.decodeUtf8 json)) metaId
 
-instance FromRow CourseMeta where fromRow = CourseMeta <$> field <*> field
-instance FromRow CourseData where fromRow = CourseData <$> field <*> liftM2 CourseMeta field field
-
-instance ToRow CourseMeta where toRow (CourseMeta a b) = [toField a,toField b]
--- instance ToRow CourseData where toRow (CourseData a b) = [toField a,b]
-
-addCourseMeta :: [CourseMeta] -> Connection -> IO Int64
-addCourseMeta cms c = do
-  r <- Ps.executeMany c "insert into course_meta (url,school) values (?,?)" $ P.map (\x -> (url x,school x)) cms
-  return r
-
--- addCourseData :: [CourseData] -> Connection -> IO Int64
--- addCourseData cds c = do
---   r <- Ps.executeMany c "insert into course_data (json,courseMeta) values (?,?)" $ P.map (\x -> (json x,courseMeta x)) cds
---   return r
-
-getCourseData :: Int64 -> Connection -> IO [CourseData]
-getCourseData id c = do
-  r <- Ps.query_ c "select json,courseMeta from course_data where"
-  return r
-
-connect :: IO Connection
-connect = Ps.connect defaultConnectInfo{connectDatabase = "klas_development"
-                                       ,connectUser = "klas"
-                                       ,connectPassword = "mbp2ubun2"
-                                       }
-
-connectTest :: IO Connection
-connectTest = Ps.connect defaultConnectInfo{connectDatabase = "klas_test"
-                                       ,connectUser = "klas"
-                                       ,connectPassword = "mbp2ubun2"
-                                       }

@@ -9,7 +9,7 @@ import Control.Applicative
 import Control.Monad
 import qualified Data.ByteString.Lazy as L
 import Data.Aeson
-import Data.Text
+import Data.Text as T
 
 data Courses = Courses {message :: Text
                        ,totalResults :: Int
@@ -76,7 +76,6 @@ data Course = Course {courseId :: Maybe Int
                      ,sections :: Maybe [Text]
                      } deriving (Show,Generic)
 
-
 instance FromJSON Course where
   parseJSON (Object v) = Course <$>
                          (v .:? "courseId") <*> 
@@ -136,11 +135,17 @@ instance FromJSON Course where
                          (v .:? "sections")
 instance ToJSON Course
 
-get :: String -> IO L.ByteString
-get url = simpleHttp url
+url :: Text
+url = "http://www.scps.nyu.edu/webapps/ncCourseSearch.htm?action=searchAll"
+
+school ::Text
+school = "NYU:SCPS"
+
+get :: Text -> IO L.ByteString
+get url = simpleHttp $ T.unpack url
 
 courseData :: IO (Maybe Courses)
 courseData = do
-  let res = get "http://www.scps.nyu.edu/webapps/ncCourseSearch.htm?action=searchAll"
+  let res = get url
   json <- (decode <$> res) :: IO (Maybe Courses)
   return json
