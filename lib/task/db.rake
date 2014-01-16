@@ -48,7 +48,7 @@ namespace :db do
   desc "start postgres"
   task :start, [:verbose] do |t, arg|
     unless process_running?('postgres')
-      sh "sudo /etc/init.d/postgresql start"
+      sh "sudo /etc/init.d/postgresql start" if platform?('linux')
     else
       puts "postgresql is already running".yellow
     end
@@ -57,7 +57,7 @@ namespace :db do
   desc "start postgres"
   task :stop do
     if process_running?('postgres')
-      sh "sudo /etc/init.d/postgresql stop"
+      sh "sudo /etc/init.d/postgresql stop" if platform?('linux')
     else
       puts "postgresql isn't running".yellow
     end

@@ -7,7 +7,7 @@ namespace :es do
   desc "start elasticsearch"
   task :start do
     unless process_running?('java', 'org.elasticsearch.bootstrap.ElasticSearch')
-      sh "sudo /etc/init.d/elasticsearch start"
+      sh "sudo /etc/init.d/elasticsearch start" if platform?('linux')
     else
       puts "elasticsearch is already running".yellow
     end
@@ -16,7 +16,7 @@ namespace :es do
   desc "stop elasticsearch"
   task :stop do
     if process_running?('java', 'org.elasticsearch.bootstrap.ElasticSearch')
-      sh "sudo /etc/init.d/elasticsearch stop"
+      sh "sudo /etc/init.d/elasticsearch stop" if platform?('linux')
     else
       puts "elasticsearch isn't running".yellow
     end

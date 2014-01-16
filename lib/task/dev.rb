@@ -38,7 +38,7 @@ CABAL_DEV_DIR = proj_dir('lib/cabal-dev')
 
 GHC_PACKAGE_PATH = "#{PROJ_HOME}/lib/cabal-dev/packages-7.6.3.conf"
 EXTRA_INC, EXTRA_LIB = if platform?('darwin')
-                         ['/opt/local/include', '/opt/local/lib']
+                         ['/usr/local/include', '/usr/local/lib']
                        else
                          ['', '']
                        end
@@ -47,9 +47,9 @@ GHC = "ghc -no-user-package-db -package-db #{GHC_PACKAGE_PATH} -threaded"
 _path = []
 _path << "#{PROJ_HOME}/bin"
 _path << "#{PROJ_HOME}/lib/cabal-dev/bin"
-_path << '~/.cabal/bin'
+_path << "~/Library/Haskell/bin"
 _path << if platform?('darwin')
-           '~/Library/Haskell/bin'
+           '/opt/ghc/bin:/opt/hp/bin'
          else
            '/opt/hp/bin'
          end
